@@ -9,7 +9,7 @@ A PyTorch Code Dataset for Cutting-Edge Fine-tuning
 You can install the package using pip
 
 ```bash
-pip install -e .
+pip install pytorch-dataset
 ```
 ## Structure
 ```
