@@ -16,6 +16,7 @@ pip install pytorch-dataset
 ```python
 
 from pytorch import GitHubDatasetGenerator
+
 generator = GitHubDatasetGenerator('username', 'token')
 dataset = generator.generate_dataset()
 generator.save_dataset(dataset, 'dataset.jsonl')
