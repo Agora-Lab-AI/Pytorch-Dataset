@@ -12,6 +12,15 @@ You can install the package using pip
 pip install pytorch-dataset
 ```
 
+# Usage
+```python
+
+from pytorch import GitHubDatasetGenerator
+generator = GitHubDatasetGenerator('username', 'token')
+dataset = generator.generate_dataset()
+generator.save_dataset(dataset, 'dataset.jsonl')
+```
+
 # License
 MIT
 
