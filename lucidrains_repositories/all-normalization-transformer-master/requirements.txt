@@ -1,2 +1,0 @@
-einops
-torch==1.6

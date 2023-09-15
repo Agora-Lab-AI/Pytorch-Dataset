@@ -1,1 +1,0 @@
-from adjacent_attention_network.adjacent_attention_network import AdjacentAttentionNetwork

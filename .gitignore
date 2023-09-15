@@ -24,6 +24,8 @@ wheels/
 share/python-wheels/
 *.egg-info/
 lucidrains_repositories
+lucidrains_python_code_dataset
+
 .installed.cfg
 *.egg
 MANIFEST
