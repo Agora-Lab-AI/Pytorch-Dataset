@@ -23,6 +23,7 @@ var/
 wheels/
 share/python-wheels/
 *.egg-info/
+lucidrains_repositories
 .installed.cfg
 *.egg
 MANIFEST

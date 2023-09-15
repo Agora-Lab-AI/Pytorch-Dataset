@@ -1,52 +1,51 @@
+import os
 import requests
-import json
-import base64
+import zipfile
 
-class GitHubDatasetGenerator:
-    def __init__(self, username, token):
-        self.username = username
-        self.token = token
-        self.base_url = "https://api.github.com"
-        self.headers = {'Authorization': f'token {self.token}'}
+# GitHub username
+username = "lucidrains"
 
-    def get_repos(self):
-        url = f"{self.base_url}/users/{self.username}/repos"
-        response = requests.get(url, headers=self.headers)
-        return json.loads(response.text)
+# API endpoint to fetch user's repositories
+api_url = f"https://api.github.com/users/{username}/repos"
 
-    def get_files(self, repo_name):
-        url = f"{self.base_url}/repos/{self.username}/{repo_name}/contents"
-        response = requests.get(url, headers=self.headers)
-        return json.loads(response.text)
+# Directory to store the downloaded repositories
+download_dir = "lucidrains_repositories"
 
-    def get_file_content(self, download_url):
-        response = requests.get(download_url)
-        return response.text
+# Create the download directory if it doesn't exist
+os.makedirs(download_dir, exist_ok=True)
 
-    def generate_dataset(self):
-        dataset = []
-        repos = self.get_repos()
-        for repo in repos:
-            repo_name = repo['name']
-            files = self.get_files(repo_name)
-            for file in files:
-                if file['name'].endswith('.py') or file['name'] == 'README.md':
-                    file_content = self.get_file_content(file['download_url'])
-                    dataset.append({
-                        'repo': repo_name,
-                        'file': file['name'],
-                        'url': file['html_url'],
-                        'content': file_content
-                    })
-        return dataset
+# Make a GET request to fetch the user's repositories
+response = requests.get(api_url)
 
-    def save_dataset(self, dataset, filename):
-        with open(filename, 'w') as f:
-            for data in dataset:
-                f.write(json.dumps(data))
-                f.write('\n')
+# Check if the request was successful (status code 200)
+if response.status_code == 200:
+    repositories = response.json()
 
+    # Iterate over the repositories
+    for repo in repositories:
+        repo_name = repo["name"]
+        repo_url = repo["html_url"]
+        zip_url = f"{repo_url}/archive/refs/heads/master.zip"
+        zip_file_path = os.path.join(download_dir, f"{repo_name}.zip")
 
-# generator = GitHubDatasetGenerator('username', 'token')
-# dataset = generator.generate_dataset()
-# generator.save_dataset(dataset, 'dataset.jsonl')
+        # Download the ZIP file
+        zip_response = requests.get(zip_url)
+
+        # Check if the ZIP file download was successful
+        if zip_response.status_code == 200:
+            with open(zip_file_path, "wb") as zip_file:
+                zip_file.write(zip_response.content)
+            
+            # Unzip the repository
+            with zipfile.ZipFile(zip_file_path, "r") as zip_ref:
+                zip_ref.extractall(download_dir)
+
+            print(f"Downloaded and unzipped {repo_name}")
+        else:
+            print(f"Failed to download {repo_name}")
+
+else:
+    print(f"Failed to fetch repositories for user {username}")
+
+print("All repositories downloaded and unzipped.")
+
