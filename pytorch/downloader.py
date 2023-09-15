@@ -3,12 +3,6 @@ import requests
 import zipfile
 
 class GitHubRepoDownloader:
-    """
-    # Example usage:
-    # downloader = GitHubRepoDownloader(username="lucidrains", download_dir="lucidrains_repositories")
-    # downloader.download_repositories()
-    
-    """
     def __init__(self, username, download_dir):
         self.username = username
         self.api_url = f"https://api.github.com/users/{username}/repos"
@@ -28,15 +22,28 @@ class GitHubRepoDownloader:
                 if zip_response.status_code == 200:
                     with open(zip_file_path, "wb") as zip_file:
                         zip_file.write(zip_response.content)
-                    self._unzip_repository(zip_file_path)
-                    print(f"Downloaded and unzipped {repo_name}")
+                    if self._is_valid_zip(zip_file_path):
+                        self._unzip_repository(zip_file_path)
+                        print(f"Downloaded and unzipped {repo_name}")
+                    else:
+                        print(f"Invalid ZIP file for {repo_name}")
                 else:
                     print(f"Failed to download {repo_name}")
         else:
             print(f"Failed to fetch repositories for user {self.username}")
         print("All repositories downloaded and unzipped.")
 
+    def _is_valid_zip(self, zip_file_path):
+        try:
+            with zipfile.ZipFile(zip_file_path, "r") as zip_ref:
+                return True
+        except zipfile.BadZipFile:
+            return False
+
     def _unzip_repository(self, zip_file_path):
         with zipfile.ZipFile(zip_file_path, "r") as zip_ref:
             zip_ref.extractall(self.download_dir)
 
+# Example usage:
+downloader = GitHubRepoDownloader(username="lucidrains", download_dir="lucidrains_repositories")
+downloader.download_repositories()
