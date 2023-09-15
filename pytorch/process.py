@@ -1,5 +1,6 @@
 import os
 from datasets import Dataset, load_from_disk
+import re
 
 class LucidrainsDataset:
     """    
@@ -45,9 +46,12 @@ class LucidrainsDataset:
         python_files = []
         for root, _, files in os.walk(repo_dir):
             for file in files:
-                if file.endswith(".py"):
+                if file.endswith(".py") and file != "setup.py":
                     with open(os.path.join(root, file), "r", encoding="utf-8") as f:
                         python_code = f.read()
+                        # Remove import statements to exclude dependencies
+                        python_code = re.sub(r'^import .*\n', '', python_code, flags=re.MULTILINE)
+                        python_code = re.sub(r'^from .*\n', '', python_code, flags=re.MULTILINE)
                     python_files.append(python_code)
         return python_files
 
@@ -66,11 +70,8 @@ python_code_dataset = lucidrains_data.create_dataset()
 # Save the dataset
 python_code_dataset.save_to_disk("lucidrains_python_code_dataset")
 
-# # Load the saved dataset for further use
+# Load the saved dataset for further use
 loaded_dataset = load_from_disk("lucidrains_python_code_dataset")
-loaded_dataset.push_to_hub("kye/all-lucidrains-code")
 
-# Get the first few samples from the dataset
-# print(loaded_dataset["python_code"][:5])
-
-# save_dataset(dataset_name="kye/all-lucidrains-code")
+# Push the dataset to the Hugging Face Datasets Hub
+loaded_dataset.push_to_hub("kye/all-kye-code")

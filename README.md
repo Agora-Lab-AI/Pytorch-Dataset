@@ -13,15 +13,24 @@ pip install pytorch-dataset
 ```
 
 # Usage
+Downloader that downloads and unzips each repository in an account
 ```python
 
-from pytorch import GitHubDatasetGenerator
+from pytorch import GitHubRepoDownloader
 
-generator = GitHubDatasetGenerator('username', 'token')
-dataset = generator.generate_dataset()
-generator.save_dataset(dataset, 'dataset.jsonl')
+downloader = GitHubRepoDownloader(username="lucidrains", download_dir="lucidrains_repositories")
+downloader.download_repositories()
 ```
 
+Processor that cleans, formats, and submits the cleaned dataset to huggingface
+```python
+from pytorch import CodeDatasetBuilder
+
+code_builder = CodeDatasetBuilder("lucidrains_repositories")
+code_builder.save_dataset("lucidrains_python_code_dataset")
+code_builder.push_to_hub("lucidrains_python_code_dataset", organization="kye")
+
+```
 # License
 MIT
 
