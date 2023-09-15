@@ -58,17 +58,17 @@ class LucidrainsDataset:
         return dataset
 
 # Initialize the LucidrainsDataset with the path to the repositories directory
-repos_dir = "lucidrains_repositories"
+repos_dir = "pytorch/pytorch-pytorch-ec8b58f"
 lucidrains_data = LucidrainsDataset(repos_dir)
 
 # Collect Python code snippets and create a dataset
 python_code_dataset = lucidrains_data.create_dataset()
 
 # Save the dataset
-python_code_dataset.save_to_disk("lucidrains_python_code_dataset")
+python_code_dataset.save_to_disk("pytorch")
 
 # Load the saved dataset for further use
-loaded_dataset = load_from_disk("lucidrains_python_code_dataset")
+loaded_dataset = load_from_disk("pytorch")
 
 # Push the dataset to the Hugging Face Datasets Hub
-loaded_dataset.push_to_hub("kye/lucidrains-code-2")
+loaded_dataset.push_to_hub("kye/all-pytorch-code")
