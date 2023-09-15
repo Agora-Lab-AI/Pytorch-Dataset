@@ -49,9 +49,6 @@ class LucidrainsDataset:
                 if file.endswith(".py") and file != "setup.py":
                     with open(os.path.join(root, file), "r", encoding="utf-8") as f:
                         python_code = f.read()
-                        # Remove import statements to exclude dependencies
-                        python_code = re.sub(r'^import .*\n', '', python_code, flags=re.MULTILINE)
-                        python_code = re.sub(r'^from .*\n', '', python_code, flags=re.MULTILINE)
                     python_files.append(python_code)
         return python_files
 
@@ -74,4 +71,4 @@ python_code_dataset.save_to_disk("lucidrains_python_code_dataset")
 loaded_dataset = load_from_disk("lucidrains_python_code_dataset")
 
 # Push the dataset to the Hugging Face Datasets Hub
-loaded_dataset.push_to_hub("kye/all-kye-code")
+loaded_dataset.push_to_hub("kye/lucidrains-code-2")

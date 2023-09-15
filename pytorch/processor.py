@@ -102,7 +102,7 @@ class CodeDatasetBuilder:
         except Exception as e:
             raise RuntimeError(f"Error while loading the dataset: {e}")
 
-    def push_to_hub(self, dataset_name, organization=None):
+    def push_to_hub(self, dataset_name):
         """
         Pushes the code dataset to the Hugging Face Model Hub.
 
@@ -110,10 +110,8 @@ class CodeDatasetBuilder:
             dataset_name (str): The name of the saved dataset.
             organization (str, optional): The organization on the Model Hub to push to (default is "username").
         """
-        dataset = self.load_dataset(dataset_name)
-        organization = organization or "username"
         try:
-            dataset.push_to_hub(f"{organization}/{dataset_name}")
+            self.load_dataset.push_to_hub(f"{dataset_name}")
         except Exception as e:
             raise RuntimeError(f"Error while pushing the dataset to the Hugging Face Model Hub: {e}")
 
@@ -122,7 +120,10 @@ code_builder = CodeDatasetBuilder("lucidrains_repositories")
 
 code_builder.save_dataset(
     "lucidrains_python_code_dataset", 
-    exclude_files=["setup.py"], exclude_dirs=["tests"]
+    exclude_files=["setup.py"], 
+    exclude_dirs=["tests"]
 )
 
-code_builder.push_to_hub("lucidrains_python_code_dataset", organization="kye")
+
+
+code_builder.push_to_hub("all-lucidrains-code")
