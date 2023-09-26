@@ -116,14 +116,14 @@ class CodeDatasetBuilder:
             raise RuntimeError(f"Error while pushing the dataset to the Hugging Face Model Hub: {e}")
 
 # Example usage:
-code_builder = CodeDatasetBuilder("lucidrains_repositories")
+code_builder = CodeDatasetBuilder("huggingface")
 
 code_builder.save_dataset(
-    "lucidrains_python_code_dataset", 
+    "huggingface", 
     exclude_files=["setup.py"], 
     exclude_dirs=["tests"]
 )
 
 
 
-code_builder.push_to_hub("all-lucidrains-code")
+code_builder.push_to_hub("all-hf-python-2")

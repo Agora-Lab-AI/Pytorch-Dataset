@@ -20,7 +20,7 @@ class LucidrainsDataset:
         python_files = []
         for root, _, files in os.walk(repo_dir):
             for file in files:
-                if file.endswith(".py"):
+                if file.endswith(".c"):
                     file_path = os.path.join(root, file)
                     if os.path.getsize(file_path) <= self.max_file_size:
                         try:
@@ -45,12 +45,12 @@ class LucidrainsDataset:
         return dataset
 
 # Usage remains similar
-repos_dir = "pytorch_repositories"
+repos_dir = "torvalds"
 lucidrains_data = LucidrainsDataset(repos_dir)
 
 python_code_dataset = lucidrains_data.create_dataset()
 
-python_code_dataset.save_to_disk("lucidrains_python_code_dataset")
+python_code_dataset.save_to_disk("torvalds")
 
-loaded_dataset = load_from_disk("lucidrains_python_code_dataset")
-loaded_dataset.push_to_hub("kye/all-kye-python-code-2")
+loaded_dataset = load_from_disk("torvalds")
+loaded_dataset.push_to_hub("kye/all-torvalds-c-code-1")

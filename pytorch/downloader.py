@@ -63,8 +63,8 @@ class GitHubRepoDownloader:
 
 # Example usage:
 downloader = GitHubRepoDownloader(
-    username="kyegomez", 
-    download_dir="pytorch_repositories", 
+    username="torvalds", 
+    download_dir="torvalds", 
     api_token=""
 )
 downloader.download_repositories()
