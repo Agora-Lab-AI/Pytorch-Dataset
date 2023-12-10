@@ -4,10 +4,12 @@ import zipfile
 import time
 from zipfile import BadZipFile
 
+
 class GitHubRepoDownloader:
     """
     A utility class to download and unzip GitHub repositories.
     """
+
     def __init__(self, username, download_dir, api_token=None, specific_repos=None):
         self.username = username
         self.api_url = f"https://api.github.com/users/{username}/repos"
@@ -31,7 +33,10 @@ class GitHubRepoDownloader:
                 break
             all_repositories.extend(response.json())
             page += 1
-            if "X-RateLimit-Remaining" in response.headers and int(response.headers["X-RateLimit-Remaining"]) == 0:
+            if (
+                "X-RateLimit-Remaining" in response.headers
+                and int(response.headers["X-RateLimit-Remaining"]) == 0
+            ):
                 time.sleep(60)
         return all_repositories
 
@@ -61,12 +66,11 @@ class GitHubRepoDownloader:
         with zipfile.ZipFile(zip_file_path, "r") as zip_ref:
             zip_ref.extractall(self.download_dir)
 
+
 # Example usage:
 downloader = GitHubRepoDownloader(
-    username="torvalds", 
-    download_dir="torvalds", 
-    api_token=""
+    username="NVIDIA",
+    download_dir="torvalds",
+    api_token="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",
 )
 downloader.download_repositories()
-
-

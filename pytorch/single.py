@@ -4,6 +4,7 @@ import zipfile
 from zipfile import BadZipFile
 import shutil
 
+
 class GitHubRepoDownloaderSingle:
     """
     A utility class to download and unzip a single GitHub repository and remove code files of a certain extension.
@@ -29,7 +30,9 @@ class GitHubRepoDownloaderSingle:
     def __init__(self, username, repo_name, download_dir, exclude_extension=".py"):
         self.username = username
         self.repo_name = repo_name
-        self.api_url = f"https://api.github.com/repos/{username}/{repo_name}/zipball/master"
+        self.api_url = (
+            f"https://api.github.com/repos/{username}/{repo_name}/zipball/master"
+        )
         self.download_dir = download_dir
         self.exclude_extension = exclude_extension
         os.makedirs(self.download_dir, exist_ok=True)
@@ -49,7 +52,9 @@ class GitHubRepoDownloaderSingle:
             try:
                 self._unzip_repository(zip_file_path)
                 print(f"Downloaded and unzipped {self.repo_name}")
-                self._remove_files_by_extension(self.download_dir, self.exclude_extension)
+                self._remove_files_by_extension(
+                    self.download_dir, self.exclude_extension
+                )
                 print(f"Removed files with extension {self.exclude_extension}")
             except BadZipFile:
                 print(f"Invalid ZIP file for {self.repo_name}")
@@ -83,9 +88,14 @@ class GitHubRepoDownloaderSingle:
                 if file.endswith(extension):
                     os.remove(os.path.join(root, file))
 
+
 # Example usage:
-downloader = GitHubRepoDownloaderSingle(username="lucidrains", repo_name="repo-name",
-                                       download_dir="lucidrains_repo", exclude_extension=".py")
+downloader = GitHubRepoDownloaderSingle(
+    username="lucidrains",
+    repo_name="repo-name",
+    download_dir="lucidrains_repo",
+    exclude_extension=".py",
+)
 try:
     downloader.download_repository()
 except RuntimeError as e:

@@ -35,7 +35,7 @@ if response.status_code == 200:
         if zip_response.status_code == 200:
             with open(zip_file_path, "wb") as zip_file:
                 zip_file.write(zip_response.content)
-            
+
             # Unzip the repository
             with zipfile.ZipFile(zip_file_path, "r") as zip_ref:
                 zip_ref.extractall(download_dir)
@@ -48,4 +48,3 @@ else:
     print(f"Failed to fetch repositories for user {username}")
 
 print("All repositories downloaded and unzipped.")
-

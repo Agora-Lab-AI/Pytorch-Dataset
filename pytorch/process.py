@@ -2,6 +2,7 @@ import os
 import concurrent.futures
 from datasets import Dataset, load_from_disk
 
+
 class LucidrainsDataset:
     def __init__(self, repos_dir, max_file_size=5 * 1024 * 1024):  # 5 MB default max
         self.repos_dir = repos_dir
@@ -11,7 +12,11 @@ class LucidrainsDataset:
         all_snippets = []
         with concurrent.futures.ThreadPoolExecutor() as executor:
             for snippets in executor.map(
-                self._collect_python_files_in_repo, [os.path.join(self.repos_dir, repo_name) for repo_name in os.listdir(self.repos_dir)]
+                self._collect_python_files_in_repo,
+                [
+                    os.path.join(self.repos_dir, repo_name)
+                    for repo_name in os.listdir(self.repos_dir)
+                ],
             ):
                 all_snippets.extend(snippets)
         return all_snippets
@@ -26,23 +31,30 @@ class LucidrainsDataset:
                         try:
                             with open(file_path, "r", encoding="utf-8") as f:
                                 python_code = f.read()
-                            python_files.append({
-                                "python_code": python_code,
-                                "repo_name": os.path.basename(repo_dir),
-                                "file_path": os.path.relpath(file_path, repo_dir)
-                            })
+                            python_files.append(
+                                {
+                                    "python_code": python_code,
+                                    "repo_name": os.path.basename(repo_dir),
+                                    "file_path": os.path.relpath(file_path, repo_dir),
+                                }
+                            )
                         except UnicodeDecodeError:
                             print(f"Failed to decode {file_path}")
         return python_files
 
     def create_dataset(self):
         python_code_snippets = self.collect_python_files()
-        dataset = Dataset.from_dict({
-            "python_code": [snippet["python_code"] for snippet in python_code_snippets],
-            "repo_name": [snippet["repo_name"] for snippet in python_code_snippets],
-            "file_path": [snippet["file_path"] for snippet in python_code_snippets]
-        })
+        dataset = Dataset.from_dict(
+            {
+                "python_code": [
+                    snippet["python_code"] for snippet in python_code_snippets
+                ],
+                "repo_name": [snippet["repo_name"] for snippet in python_code_snippets],
+                "file_path": [snippet["file_path"] for snippet in python_code_snippets],
+            }
+        )
         return dataset
+
 
 # Usage remains similar
 repos_dir = "torvalds"

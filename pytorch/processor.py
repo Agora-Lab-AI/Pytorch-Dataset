@@ -1,6 +1,7 @@
 import os
 from datasets import Dataset, load_from_disk
 
+
 class CodeDatasetBuilder:
     """
     A utility class to build and manage code datasets.
@@ -20,7 +21,9 @@ class CodeDatasetBuilder:
     def __init__(self, root_dir):
         self.root_dir = root_dir
 
-    def collect_code_files(self, file_extension=".py", exclude_files=None, exclude_dirs=None):
+    def collect_code_files(
+        self, file_extension=".py", exclude_files=None, exclude_dirs=None
+    ):
         """
         Collects code snippets from files in the specified directory and its subdirectories.
 
@@ -51,7 +54,9 @@ class CodeDatasetBuilder:
 
         return code_snippets
 
-    def create_dataset(self, file_extension=".py", exclude_files=None, exclude_dirs=None):
+    def create_dataset(
+        self, file_extension=".py", exclude_files=None, exclude_dirs=None
+    ):
         """
         Creates a dataset from collected code snippets.
 
@@ -63,11 +68,15 @@ class CodeDatasetBuilder:
         Returns:
             datasets.Dataset: The code dataset.
         """
-        code_snippets = self.collect_code_files(file_extension, exclude_files, exclude_dirs)
+        code_snippets = self.collect_code_files(
+            file_extension, exclude_files, exclude_dirs
+        )
         dataset = Dataset.from_dict({"code": code_snippets})
         return dataset
 
-    def save_dataset(self, dataset_name, file_extension=".py", exclude_files=None, exclude_dirs=None):
+    def save_dataset(
+        self, dataset_name, file_extension=".py", exclude_files=None, exclude_dirs=None
+    ):
         """
         Saves the code dataset to disk.
 
@@ -113,17 +122,17 @@ class CodeDatasetBuilder:
         try:
             self.load_dataset.push_to_hub(f"{dataset_name}")
         except Exception as e:
-            raise RuntimeError(f"Error while pushing the dataset to the Hugging Face Model Hub: {e}")
+            raise RuntimeError(
+                f"Error while pushing the dataset to the Hugging Face Model Hub: {e}"
+            )
+
 
 # Example usage:
 code_builder = CodeDatasetBuilder("huggingface")
 
 code_builder.save_dataset(
-    "huggingface", 
-    exclude_files=["setup.py"], 
-    exclude_dirs=["tests"]
+    "huggingface", exclude_files=["setup.py"], exclude_dirs=["tests"]
 )
-
 
 
 code_builder.push_to_hub("all-hf-python-2")
