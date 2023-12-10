@@ -71,6 +71,6 @@ class GitHubRepoDownloader:
 downloader = GitHubRepoDownloader(
     username="NVIDIA",
     download_dir="torvalds",
-    api_token="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",
+    api_token="",
 )
 downloader.download_repositories()
